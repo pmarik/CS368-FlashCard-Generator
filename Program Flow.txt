@@ -5,10 +5,16 @@ If the generate cards button is clicked, it will show a new screen where the use
 Generate Cards Code:
 
 
-If the user already has sets loaded, they can click on view/edit sets page. On this page the user can create a new set which will bring them to the generate cards page. If the user wishes to edit a set then they will enter a new window where they can have the option to add or delete cards from the deck. 
+If the user already has sets loaded, they can click on view/edit sets page. On this page the user can create a new set which will bring them to the generate cards page. If the user wishes to edit a set then they will enter a new window where they can have the option to add or delete cards from the deck. The use can also select a "remove" button on the view/edit sets page where there will be a list of all current sets and an "X" next to each set which will delete it from the associated username.
 
 Add/delete cards from deck code:
 
 
+From the main menu, a user can select the 'Study Cards' button which brings them to the page with all decks on them. When a user clicks on a deck the cards will pop up and a user can either flip through them using the arrow keys, using the spacebar to flip the cards between word and definition. An check in the lower corner of each card will remove the card from the deck for their current study session if they have the word memorized. 
+
+Flashcard Object Code:
+
+
+Deck Object Code:
 
 
