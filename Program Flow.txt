@@ -1,0 +1,14 @@
+Program opens up with welcome screen and options to enter a previous username or create a new username to have data associated with it. Once username is selected/loaded, an option menu is presented with three buttons to choose from: Generate new cards; View/Edit sets; Study Cards. There will also be a quit option to terminate the program. 
+
+If the generate cards button is clicked, it will show a new screen where the user will click on a button that will open their system's File Explorer where they will navigate to the file they wish to make cards out of. On the same page, the user will enter which character they wish to use to separate the Word from Definition sides for the deck of flashcards to be created. The screen will then shift to the sets page where the user can select to edit the set or study the set. 
+
+Generate Cards Code:
+
+
+If the user already has sets loaded, they can click on view/edit sets page. On this page the user can create a new set which will bring them to the generate cards page. If the user wishes to edit a set then they will enter a new window where they can have the option to add or delete cards from the deck. 
+
+Add/delete cards from deck code:
+
+
+
+
