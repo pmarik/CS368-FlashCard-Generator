@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// File Name:      Flashcards.hpp
+// File Name:      Flashcards.cpp
 //
 // Author:         Paul Marik, David Wissink 
 // CS email:       marik@cs.wisc.edu, wissink@cs.wisc.edu
@@ -15,31 +15,45 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-#ifndef Final_Flashcard_HPP
-#define Final_Flashcard_HPP
-
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
-
-class Flashcard{
-
-    private:
-
-     std::string fileName;
-
-    public:
-        /**
-     * @brief Constructor for flashcards.
-     *
-     * @param string the filename of the user's document to generate cards from.
-     */
-     Flashcard();
+#include "Flashcard.hpp"
 
 
 
+    Flashcard::Flashcard(std::string line){
+            this->line = line; 
 
-};
+            int wordEnd = line.find(" - ");
+            int defStart = wordEnd + 3;
+            std::string def = line.substr(defStart);
+            std::string word = line.substr(0, wordEnd);
+            
+            this->word = word;
+            this->definition = def;
+           
+        }
 
-#endif //Final_Flashcard_HPP
+
+    std::string Flashcard::getWord(){
+      
+        return word;
+    }
+
+    std::string Flashcard::getDefinition(){
+        return definition;
+    }
+
+    void Flashcard::editDefintion(std::string def){
+       definition = def;
+       
+    }
+
+    void Flashcard::editWord(std::string newWord){
+        word = newWord;
+    }
+
+           
+        
+
+
+
+
