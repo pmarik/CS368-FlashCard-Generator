@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// File Name:      Flashcards.cpp
+// File Name:      Flashcard.cpp
 //
 // Author:         Paul Marik, David Wissink 
 // CS email:       marik@cs.wisc.edu, wissink@cs.wisc.edu
