@@ -30,6 +30,8 @@ string GetUsername();
 bool EqualIgnoreCase(string, string);
 vector<string> GetStringsFromFile(string);
 void review(Deck studyDeck);
+Deck& deckListOption(vector<Deck> allDecks);
+Deck edit(Deck& editDeck);
 
 /**
  *@brief controls the execution of the program
@@ -78,26 +80,8 @@ int main() {
 				}
 
 				else{
-					cout << deck_list_message << endl;
 
-					for (int i = 0; i < allDecks.size(); ++i){
-						cout << (allDecks[i]).getDeckName() << endl;
-					}
-
-					cout << "Enter the name of the deck from the list above: ";
-					string chosenDeck;
-					getline(cin, chosenDeck);
-
-					int index = 0;
-					for (int k = 0; k < allDecks.size(); ++k){
-						string temp = (allDecks[k]).getDeckName();
-						if (temp == chosenDeck){
-							index = k;
-							break;
-						}
-					}
-
-					review(allDecks[index]);
+					review(deckListOption(allDecks));
 
 					
 				}
@@ -105,7 +89,19 @@ int main() {
 
 			} else if (EqualIgnoreCase(option, "Edit") || EqualIgnoreCase(option, "E")) {
 				validOption = true;
-				//Edit();
+
+					
+				if (allDecks.empty()){
+					cout << no_decks_message << endl;
+				}
+
+		
+
+				edit(deckListOption(allDecks));
+
+
+
+
 			} else if (EqualIgnoreCase(option, "Generate") || EqualIgnoreCase(option, "G")) {
 				validOption = true;
 
@@ -283,6 +279,74 @@ int main() {
 				else if (userInput == "N"){
 					studyAgain = false;
 				}
-			}
+			}	
 
 	}
+
+
+
+	Deck& deckListOption(vector<Deck> allDecks){
+				cout << deck_list_message << endl;
+
+				for (int i = 0; i < allDecks.size(); ++i){
+					cout << (allDecks[i]).getDeckName() << endl;
+				}
+
+				cout << "Enter the name of the deck from the list above: ";
+				string chosenDeck;
+				getline(cin, chosenDeck);
+
+				int index = 0;
+				for (int k = 0; k < allDecks.size(); ++k){
+				string temp = (allDecks[k]).getDeckName();
+				if (temp == chosenDeck){
+					index = k;
+					break;
+					}
+				}
+
+					return allDecks[index];
+	}
+
+
+
+	Deck edit(Deck& editDeck){
+
+		
+
+				cout << "Would you like to: " << endl << "(A)dd a card" << endl << "(D)elete a card" << endl << "(C)hange a word"
+					<< endl << "(M)odify a definition" << endl;
+
+				cout << "Please enter an option from above: ";
+				string userInput;
+				getline(cin, userInput);
+
+				if (userInput == "A"){
+					cout << "Enter the word you would like to add: ";
+					getline(cin, userInput);
+
+					Flashcard newCard;
+					newCard.setWord(userInput);
+
+					cout << "Enter the Definition for this word: ";
+					getline(cin, userInput);
+					newCard.setDefintion(userInput);
+
+					editDeck.add(newCard);
+
+					cout << endl << "Your new card has been added to the deck!" << endl;
+
+				}
+				else if (userInput == "D"){
+
+				}
+				else if (userInput == "C"){
+
+				}
+				else if (userInput == "M"){
+
+				}
+	
+				return editDeck;
+	}
+
