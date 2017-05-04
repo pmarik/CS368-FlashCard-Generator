@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// File Name:      Flashcard.cpp
+// File Name:      Flashcard.hpp
 //
 // Author:         Paul Marik, David Wissink 
 // CS email:       marik@cs.wisc.edu, wissink@cs.wisc.edu
@@ -15,43 +15,64 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-#include "Flashcard.hpp"
+#ifndef Final_Flashcard_HPP
+#define Final_Flashcard_HPP
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+
+class Flashcard{
+    
+    private:
+
+     std::string line;
+     std::string word;
+     std::string definition;
+
+    public:
+     /**
+      * @brief Constructor for flashcards.
+      *
+      * @param string the filename of the user's document to generate cards from.
+      */
+     Flashcard(std::string line);
+
+    /**
+         * @brief Gets the word part of the flashcard
+         *
+         * @return the string word of the flashcard
+         */
+     std::string getWord();
+
+    /**
+         * @brief Gets the definition part of the flashcard
+         *
+         * @return the string defintion of the flashcard
+         */
+     std::string getDefinition();
+
+    /**
+         * @brief Changes the current defintion to a new definition
+         *
+         * @param def the new defintion 
+         */
+     void editDefintion(std::string def);
+
+    /**
+         * @brief Changes the current word to a new word
+         *
+         * @param newWord the new word 
+         */
+     void editWord(std::string newWord);
 
 
 
-    Flashcard::Flashcard(std::string line){
-            this->line = line; 
 
-            int wordEnd = line.find(" - ");
-            int defStart = wordEnd + 3;
-            std::string def = line.substr(defStart);
-            std::string word = line.substr(0, wordEnd);
-            
-            this->word = word;
-            this->definition = def;
-           
-        }
+};
 
-
-    std::string Flashcard::getWord(){
-      
-        return word;
-    }
-
-    std::string Flashcard::getDefinition(){
-        return definition;
-    }
-
-    void Flashcard::editDefintion(std::string def){
-       definition = def;
-       
-    }
-
-    void Flashcard::editWord(std::string newWord){
-        word = newWord;
-    }
-
-           
+#endif //Final_Flashcard_HPP
         
 
 
