@@ -30,6 +30,10 @@ string GetUsername();
 bool EqualIgnoreCase(string, string);
 vector<string> GetStringsFromFile(string);
 void review(Deck studyDeck);
+Deck& deckListOption();
+Deck edit(Deck& editDeck);
+
+static vector<Deck> allDecks;
 
 /**
  *@brief controls the execution of the program
@@ -47,10 +51,6 @@ int main() {
 	cout << endl << "Hello, " << username << "!" << endl;
 
 	//Find the users previously generated cards, if any
-	//User user = LoadUser(username);
-
-	//List of decks
-	vector<Deck> allDecks;
 
 	
 	//Display the Main Menu Loop
@@ -73,31 +73,15 @@ int main() {
 			if (EqualIgnoreCase(option, "Review") || EqualIgnoreCase(option, "R")) {
 				validOption = true;
 				
+				validOption = true;
+				
 				if (allDecks.empty()){
 					cout << no_decks_message << endl;
 				}
 
 				else{
-					cout << deck_list_message << endl;
 
-					for (int i = 0; i < allDecks.size(); ++i){
-						cout << (allDecks[i]).getDeckName() << endl;
-					}
-
-					cout << "Enter the name of the deck from the list above: ";
-					string chosenDeck;
-					getline(cin, chosenDeck);
-
-					int index = 0;
-					for (int k = 0; k < allDecks.size(); ++k){
-						string temp = (allDecks[k]).getDeckName();
-						if (temp == chosenDeck){
-							index = k;
-							break;
-						}
-					}
-
-					review(allDecks[index]);
+					review(deckListOption());
 
 					
 				}
@@ -105,10 +89,20 @@ int main() {
 
 			} else if (EqualIgnoreCase(option, "Edit") || EqualIgnoreCase(option, "E")) {
 				validOption = true;
-				//Edit();
+
+				if (allDecks.empty()) {
+					cout << no_decks_message << endl;
+				}
+				
+				
+		
+
+				edit(deckListOption());
+				
 			} else if (EqualIgnoreCase(option, "Generate") || EqualIgnoreCase(option, "G")) {
 				validOption = true;
-
+				
+				bool validFile;
 				cout << "Enter the file you'd like to create flashcards from: ";
 				
 				//Get the file from the user to generate cards/deck
@@ -252,37 +246,107 @@ int main() {
  	 */
 	void review(Deck studyDeck){
 		
-			cout << "Type in the defintion to the following words!" << endl;
-
+			cout << "Type in the correct word for each definition!" << endl;
+			
 			bool studyAgain = true;
 
 			while(studyAgain){
 				string userInput;
+				
 				for (int i = 0; i < studyDeck.getDeckSize(); ++i){
 
-				cout << (studyDeck.getCard(i)).getWord() << " --> ";
+				cout << endl << (studyDeck.getCard(i)).getDefinition() << " --> ";
 				
 				getline(cin, userInput);
 
-				if (userInput == (studyDeck.getCard(i)).getDefinition()){
-					cout << "Correct definition! Good Job!" << endl;
+				if (EqualIgnoreCase(userInput, studyDeck.getCard(i).getWord())){
+					cout << "Correct! Good Job!" << endl;
 					}
 
 				else{
-					cout << "Incorrect answer" << endl;
-					
+					cout << "Incorrect! The right answer was: " << 
+					studyDeck.getCard(i).getWord() << endl;
 					}
 				}	
 
-				cout << "Do you want to study this deck again? (Y/N):";
-				getline(cin, userInput);
-
-				if (userInput == "Y"){
-
-				}
-				else if (userInput == "N"){
-					studyAgain = false;
+				cout << "Do you want to study this deck again?" << yes_or_no;
+				bool validOption = false;
+				
+				while (!validOption) {
+					getline(cin, userInput);
+					
+					if (EqualIgnoreCase(userInput, "y") || EqualIgnoreCase(userInput, "yes")) {
+						validOption = true;
+					}
+					else if (EqualIgnoreCase(userInput, "n") || EqualIgnoreCase(userInput, "no") ){
+						validOption = true;
+						studyAgain = false;
+					} else {
+						cout << invalid_option_message;
+					}
 				}
 			}
 
 	}
+	Deck& deckListOption(){
+				cout << deck_list_message << endl;
+
+				for (int i = 0; i < allDecks.size(); ++i){
+					cout << (allDecks[i]).getDeckName() << endl;
+				}
+
+				cout << "Enter the name of the deck from the list above: ";
+				string chosenDeck;
+				getline(cin, chosenDeck);
+
+				int index = 0;
+				for (int k = 0; k < allDecks.size(); ++k){
+				string temp = (allDecks[k]).getDeckName();
+				if (temp == chosenDeck){
+					index = k;
+					break;
+					}
+				}
+
+					return allDecks[index];
+	}
+	Deck edit(Deck& editDeck){
+
+		
+
+				cout << "Would you like to: " << endl << "(A)dd a card" << endl << "(D)elete a card" << endl << "(C)hange a word"
+					<< endl << "(M)odify a definition" << endl;
+
+				cout << "Please enter an option from above: ";
+				string userInput;
+				getline(cin, userInput);
+
+				if (userInput == "A"){
+					cout << "Enter the word you would like to add: ";
+					getline(cin, userInput);
+
+					Flashcard newCard;
+					newCard.setWord(userInput);
+
+					cout << "Enter the Definition for this word: ";
+					getline(cin, userInput);
+					newCard.setDefintion(userInput);
+
+					editDeck.add(newCard);
+
+					cout << endl << "Your new card has been added to the deck!" << endl;
+
+				}
+				else if (userInput == "D"){
+
+				}
+				else if (userInput == "C"){
+
+				}
+				else if (userInput == "M"){
+
+				}
+	
+				return editDeck;
+	}
+	
