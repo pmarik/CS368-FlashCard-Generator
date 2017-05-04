@@ -1,48 +1,67 @@
+////////////////////////////////////////////////////////////////////////////////
+// File Name:      main.cpp
+//
+// Author:         Paul Marik, David Wissink 
+// CS email:       marik@cs.wisc.edu, wissink@cs.wisc.edu
+//
+// Description:    main class to run the flashcard study tool.
+//
+// Sources:        cppreference.com, <sources, if any>
+//
+// URL(s) of sources:
+//                 http://en.cppreference.com/w/cpp/container/vector
+//                 <URLs of your sources, if any>
+////////////////////////////////////////////////////////////////////////////////
+
+
+#include "Flashcard.hpp"
+#include "Deck.hpp"
+#include "Config.cpp"
+
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
 
 using namespace std;
-
-const static string welcome_message = "---------- WELCOME TO FLASHCARD GENERATOR! ----------";
-const static string username_prompt = "Enter your FlashCard Generator username or create a new one: ";
-const static string yes_or_no = "(Y)es or (N)o: ";
-const static string menu = "---------- FLASHCARD GENERATOR MENU ----------";
-const static string review_option = "(R)eview Cards";
-const static string edit_option = "(E)dit Decks";
-const static string generate_option = "(G)enerate Cards";
-const static string quit_option = "(Q)uit";
-const static string invalid_option_message = "Invalid Option, please try again: ";
-const static string exit_message = "Thanks for using FlashCard Generator!";
 
 
 string GetUsername();
 bool EqualIgnoreCase(string, string);
+vector<string> GetStringsFromFile(string);
+void review(Deck studyDeck);
 
 /**
-*@brief controls the execution of the program
-*
-*
-*/
+ *@brief controls the execution of the program
+ *
+ *
+ */
 int main() {
+
 	
 	//Display Welcome Message
-	cout << welcome_message << endl;
+	cout << endl << welcome_message << endl;
 	
 	//Get the username for the user
 	string username = GetUsername();
-	cout << endl << "Hello, " << username << "!" << endl << endl;
+	cout << endl << "Hello, " << username << "!" << endl;
 
 	//Find the users previously generated cards, if any
 	//User user = LoadUser(username);
+
+	//List of decks
+	vector<Deck> allDecks;
+
 	
 	//Display the Main Menu Loop
 	bool persist = true;
 	while (persist) {
 		
 		//Display menu options
-		cout << menu << endl << review_option << endl << edit_option << endl << generate_option 
+		cout << endl << menu << endl << review_option << endl << edit_option << endl << generate_option 
 			<< endl << quit_option << endl;
 		
-		cout << "Please enter an option from those listed above: ";
+		cout << above_choice;
 		
 		bool validOption = false;
 		while (!validOption) {
@@ -53,12 +72,69 @@ int main() {
 			//Decipher user option, and switch to correct mode
 			if (EqualIgnoreCase(option, "Review") || EqualIgnoreCase(option, "R")) {
 				validOption = true;
-				//Review();
+				
+				if (allDecks.empty()){
+					cout << no_decks_message << endl;
+				}
+
+				else{
+					cout << deck_list_message << endl;
+
+					for (int i = 0; i < allDecks.size(); ++i){
+						cout << (allDecks[i]).getDeckName() << endl;
+					}
+
+					cout << "Enter the name of the deck from the list above: ";
+					string chosenDeck;
+					getline(cin, chosenDeck);
+
+					int index = 0;
+					for (int k = 0; k < allDecks.size(); ++k){
+						string temp = (allDecks[k]).getDeckName();
+						if (temp == chosenDeck){
+							index = k;
+							break;
+						}
+					}
+
+					review(allDecks[index]);
+
+					
+				}
+
+
 			} else if (EqualIgnoreCase(option, "Edit") || EqualIgnoreCase(option, "E")) {
 				validOption = true;
 				//Edit();
 			} else if (EqualIgnoreCase(option, "Generate") || EqualIgnoreCase(option, "G")) {
 				validOption = true;
+
+				cout << "Enter the file you'd like to create flashcards from: ";
+				
+				//Get the file from the user to generate cards/deck
+            	string fileName;
+            	getline(cin, fileName);
+
+				//Hold all of the lines from the user's' file
+				vector<string> allStrings = GetStringsFromFile(fileName);
+				
+				//Create a new deck with the user's file data
+				Deck usersDeck(fileName);
+
+				//Create cards from each line of file and add them to the deck
+				for(int i = 0; i < allStrings.size(); ++i){
+					Flashcard card(allStrings[i]); 
+					usersDeck.add(card);
+				}
+				
+				//Notify the user the deck has been created with their cards
+				cout << "*Generating deck*" << endl;
+
+				allDecks.push_back(usersDeck);
+				cout << "Cards added to your new deck: \"" << usersDeck.getDeckName() << "\" and was added to your list of decks" << endl;
+				
+				
+
 				//Generate();
 			} else if (EqualIgnoreCase(option, "Quit")|| EqualIgnoreCase(option, "Q")) {
 				validOption = true;
@@ -76,7 +152,12 @@ int main() {
 
 
 	}
-	
+
+	/**
+ 	 * @brief Gets the username of a user
+ 	 *
+  	 * @param N/A
+ 	 */
 	string GetUsername() {
 		
 		//Initialize choice to enter while loop
@@ -110,15 +191,21 @@ int main() {
 		return username;
 	}
 	
+
+
 	/**User LoadUser(string username) {
 		
 		
 	}*/
+
+
+
+
 	
 	/**
-	*@brief compares to strings, ignoring differences in upper/lowercase letters
-	*@return returns true if the strings are the same, false otherwise
-	*/
+	 *@brief compares to strings, ignoring differences in upper/lowercase letters
+	 *@return returns true if the strings are the same, false otherwise
+	 */
 	bool EqualIgnoreCase(string s1, string s2) {
 		//Convert each string to uppercase
 		for(int i = 0; i < s1.size(); i++) {
@@ -134,4 +221,68 @@ int main() {
 			return false;
 		}
 	}
+
+
+	/**
+ 	 * @brief Adds a line of text from file to a vector
+ 	 *
+ 	 * @param fileName the name of the user's file to get strings from'
+ 	 */
+	vector<string> GetStringsFromFile(string fileName){
+		fileName += ".txt";
+		ifstream infile(fileName);
+			
+		vector<string> temp;
+
+		string line;
+		while(getline(infile, line)){
+			temp.push_back(line);
+		}
+
+		infile.close();
+
+		return temp;
+	}
 	
+
+	/**
+ 	 * @brief Allows the user to review a chosen deck
+ 	 *
+ 	 * @param Deck studydeck - a Deck to retrieve cards and study from
+ 	 */
+	void review(Deck studyDeck){
+		
+			cout << "Type in the defintion to the following words!" << endl;
+
+			bool studyAgain = true;
+
+			while(studyAgain){
+				string userInput;
+				for (int i = 0; i < studyDeck.getDeckSize(); ++i){
+
+				cout << (studyDeck.getCard(i)).getWord() << " --> ";
+				
+				getline(cin, userInput);
+
+				if (userInput == (studyDeck.getCard(i)).getDefinition()){
+					cout << "Correct definition! Good Job!" << endl;
+					}
+
+				else{
+					cout << "Incorrect answer" << endl;
+					
+					}
+				}	
+
+				cout << "Do you want to study this deck again? (Y/N):";
+				getline(cin, userInput);
+
+				if (userInput == "Y"){
+
+				}
+				else if (userInput == "N"){
+					studyAgain = false;
+				}
+			}
+
+	}
