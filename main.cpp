@@ -44,7 +44,6 @@ static vector<Deck> allDecks;
 /**
  *@brief controls the execution of the program
  *
- *
  */
 int main() {
 
@@ -92,7 +91,7 @@ int main() {
 					
 				}
 
-
+			//Run edit menu
 			} else if (EqualIgnoreCase(option, "Edit") || EqualIgnoreCase(option, "E")) {
 				validOption = true;
 
@@ -105,6 +104,7 @@ int main() {
 
 				edit(deckListOption());
 				
+				//Code to generate a deck of cards from a file
 			} else if (EqualIgnoreCase(option, "Generate") || EqualIgnoreCase(option, "G")) {
 				validOption = true;
 				
@@ -136,7 +136,7 @@ int main() {
 				
 				
 
-				//Generate();
+				//Quit the program;
 			} else if (EqualIgnoreCase(option, "Quit")|| EqualIgnoreCase(option, "Q")) {
 				validOption = true;
 				persist = false;
@@ -249,16 +249,6 @@ int main() {
 		
 		return username;
 	}
-	
-
-
-	/**User LoadUser(string username) {
-		
-		
-	}*/
-
-
-
 
 	
 	/**
@@ -315,6 +305,7 @@ int main() {
 			
 			bool studyAgain = true;
 
+			
 			while(studyAgain){
 				string userInput;
 				
@@ -353,9 +344,16 @@ int main() {
 			}
 
 	}
+	
+	/**
+ 	 * @brief Allows the user to select a deck
+ 	 *
+ 	 * @param N/A
+ 	 */
 	Deck& deckListOption(){
 				cout << endl << deck_list_message << endl;
 
+				//print out all the decks
 				for (int i = 0; i < allDecks.size(); ++i){
 					cout << (allDecks[i]).getDeckName() << endl;
 				}
@@ -367,7 +365,8 @@ int main() {
 				while (!validDeck) {
 					string chosenDeck;				
 					getline(cin, chosenDeck);
-				
+					
+					//Check if the user input matches a given deck
 					for (int k = 0; k < allDecks.size(); ++k){
 						string temp = (allDecks[k]).getDeckName();
 						if (EqualIgnoreCase(temp, chosenDeck)){
@@ -382,6 +381,11 @@ int main() {
 					return allDecks[index];
 	}
 	
+	/**
+ 	 * @brief Runs the Edit menu loop
+ 	 *
+ 	 * @param Deck editDeck the deck to be edited
+ 	 */
 void edit(Deck& editDeck){
 	bool continueEdit = true;
 	while(continueEdit) { 
@@ -416,10 +420,13 @@ void edit(Deck& editDeck){
 			ChangeWord(editDeck);
 				
 		}
+		//MODIFY A DEFINITION
 		else if (EqualIgnoreCase(userInput, "m") || EqualIgnoreCase(userInput, "modfiy")){
 			ChangeDefinition(editDeck);
+		//Return to main menu
 		} else if (EqualIgnoreCase(userInput, "q") || EqualIgnoreCase(userInput, "quit")) {
 			continueEdit = false;
+		//Rename a deck
 		} else if (EqualIgnoreCase(userInput, "n")) {
 			RenameDeck(editDeck);
 		}
@@ -428,6 +435,11 @@ void edit(Deck& editDeck){
 	}
 	
 	
+	/**
+ 	 * @brief Deletes a card from a given deck
+ 	 *
+ 	 * @param Deck editDeck the deck to be edited
+ 	 */
 void Delete(Deck& editDeck) {
 	cout << endl << "** List of words in " << editDeck.getDeckName() << " **" << endl;
 	for(int i = 0; i < editDeck.getDeckSize(); i++) {
@@ -477,6 +489,11 @@ void Delete(Deck& editDeck) {
 	}
 }
 
+/**
+ 	 * @brief Changes a word in a given deck
+ 	 *
+ 	 * @param Deck editDeck the deck to be edited
+ 	 */
 void ChangeWord(Deck& editDeck) {
 	cout << endl << "** List of words in " << editDeck.getDeckName() << " **" << endl;
 	for(int i = 0; i < editDeck.getDeckSize(); i++) {
@@ -489,7 +506,7 @@ void ChangeWord(Deck& editDeck) {
 	string userWord;
 	bool validWord = false;
 			
-	//Determine card to delete
+	//Determine card to edit
 	while (!validWord) {
 		getline(cin, userWord);
 		if (EqualIgnoreCase(userWord, "r")) validWord = true;
@@ -529,6 +546,11 @@ void ChangeWord(Deck& editDeck) {
 	}
 }
 
+/**
+ 	 * @brief Changes a definition in a given deck
+ 	 *
+ 	 * @param Deck editDeck the deck to be edited
+ 	 */
 void ChangeDefinition(Deck& editDeck) {
 	cout << endl << "** List of words in " << editDeck.getDeckName() << " **" << endl;
 	for(int i = 0; i < editDeck.getDeckSize(); i++) {
@@ -541,7 +563,7 @@ void ChangeDefinition(Deck& editDeck) {
 	string userWord;
 	bool validWord = false;
 			
-	//Determine card to delete
+	//Determine card to edit
 	while (!validWord) {
 		getline(cin, userWord);
 		if (EqualIgnoreCase(userWord, "r")) validWord = true;
@@ -581,6 +603,11 @@ void ChangeDefinition(Deck& editDeck) {
 	}
 }
 
+/**
+ 	 * @brief renames a given deck
+ 	 *
+ 	 * @param Deck editDeck the deck to be edited
+ 	 */
 void RenameDeck(Deck& editDeck) {
 	cout << endl << "What would you like to rename this deck as?: ";
 	string newName;
@@ -588,6 +615,8 @@ void RenameDeck(Deck& editDeck) {
 	getline(cin, newName);
 	cout << "Change name of deck to " << newName << "? " << yes_or_no;
 	string userchoice;
+	
+	//Get new name of deck and rename if the user wishes
 	while (!validChoice) {	
 		getline(cin, userchoice);
 		if (EqualIgnoreCase(userchoice, "y")) {
@@ -605,20 +634,36 @@ void RenameDeck(Deck& editDeck) {
 	
 }
 
+/**
+ 	 * @brief writes the users deck to a save file
+ 	 *
+ 	 * @param string username - the name the file will be saved under
+ 	 */
 	void writeSaveFile(string username){
+		//Append text file extension to the username to create a file
 		string writtenFileName = username + ".txt";
+		
+		//Create a file with the username
 		ofstream myfile;
 		myfile.open(writtenFileName);
 
+		//Used to initialize the name of a deck
 		string deckName = "";
+
+		//Loop through the list of decks and retrieve their name/data for output
 		for(int i = 0; i < allDecks.size(); ++i){
+		
+			//For each deckname write its word-definitions below it
 			deckName = (allDecks[i]).getDeckName();
 			myfile << "Deck: " + deckName + "\n";
 
 			int counts = 0;
+			//Loop through and write all of the word-definition lines to the file
 			for(int k = 0; k < allDecks[i].getDeckSize(); ++k){
 				counts++;
 				string lineToWrite = ((allDecks[i]).getCard(k)).getFlashcardLine();
+
+				//If it is the last word-defintion line in the deck then do not add a newline, otherwise do
 				if ((allDecks[i]).getDeckSize() == counts){
 					myfile << lineToWrite;
 				}
@@ -626,8 +671,10 @@ void RenameDeck(Deck& editDeck) {
 					myfile << lineToWrite + "\n";
 				}
 			}
+			myfile << "\n";
 		}
 
+		//Close the file
 		myfile.close();
 		cout << "Deck(s) saved!" << endl;
 	}
