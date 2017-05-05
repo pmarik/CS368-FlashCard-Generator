@@ -31,7 +31,10 @@ bool EqualIgnoreCase(string, string);
 vector<string> GetStringsFromFile(string);
 void review(Deck studyDeck);
 Deck& deckListOption();
-Deck edit(Deck& editDeck);
+void edit(Deck& editDeck);
+void Delete(Deck&);
+void ChangeWord(Deck&);
+void writeSaveFile(string);
 
 static vector<Deck> allDecks;
 
@@ -133,6 +136,30 @@ int main() {
 			} else if (EqualIgnoreCase(option, "Quit")|| EqualIgnoreCase(option, "Q")) {
 				validOption = true;
 				persist = false;
+
+				cout << endl << "Do you want to save your decks? ";
+
+				bool validChoice = false;
+				string choice;
+
+				while (!validChoice) {
+				getline(cin, choice);
+
+				if (EqualIgnoreCase(choice, "YES") || EqualIgnoreCase(choice, "Y")) {
+						validChoice = true;
+
+						writeSaveFile(username);
+
+					} else if (EqualIgnoreCase(choice, "NO") || EqualIgnoreCase(choice, "N")) {
+						validChoice = true;
+
+					} else {
+						cout << "Invalid option, please enter " << yes_or_no;
+					}
+				}
+
+				
+
 				cout << endl << exit_message << endl;
 			} else {
 				cout << invalid_option_message;
@@ -147,7 +174,7 @@ int main() {
 
 	}
 
-	/**
+	  	/**
  	 * @brief Gets the username of a user
  	 *
   	 * @param N/A
@@ -163,6 +190,8 @@ int main() {
 			cout << username_prompt;
 			getline(cin, username);
 			cout << "Your username is " << username << ", correct? " << yes_or_no;
+
+
 			
 			//Variables regarding users choice 
 			string choice;
@@ -174,6 +203,38 @@ int main() {
 				if (EqualIgnoreCase(choice, "YES") || EqualIgnoreCase(choice, "Y")) {
 					validUsername = true;
 					validChoice = true;
+
+					string check = username + ".txt";
+					
+					ifstream ifile(check);
+					if (ifile.is_open()){
+						string line;
+						
+						int deckCount = 0;
+						while(getline(ifile, line)){
+							
+ 
+
+							if (line.find("Deck: ") != string::npos){
+								deckCount++;
+								int deckCheck = line.find("Deck: ");
+								int deckNameStart = deckCheck + 6;
+								string loadDeckName = line.substr(deckNameStart);
+
+
+								Deck anotherDeck(loadDeckName);
+								allDecks.push_back(anotherDeck);
+							}
+							else {
+
+								Flashcard tempCard(line);
+								(allDecks[deckCount - 1]).add(tempCard);
+							}
+
+
+						}
+					}
+
 				} else if (EqualIgnoreCase(choice, "NO") || EqualIgnoreCase(choice, "N")) {
 					validChoice = true;
 				} else {
@@ -296,57 +357,195 @@ int main() {
 				}
 
 				cout << "Enter the name of the deck from the list above: ";
-				string chosenDeck;
-				getline(cin, chosenDeck);
-
+				bool validDeck = false;
 				int index = 0;
-				for (int k = 0; k < allDecks.size(); ++k){
-				string temp = (allDecks[k]).getDeckName();
-				if (temp == chosenDeck){
-					index = k;
-					break;
+				
+				while (!validDeck) {
+					string chosenDeck;				
+					getline(cin, chosenDeck);
+				
+					for (int k = 0; k < allDecks.size(); ++k){
+						string temp = (allDecks[k]).getDeckName();
+						if (EqualIgnoreCase(temp, chosenDeck)){
+							index = k;
+							validDeck = true;
+							break;
+						}
 					}
+					if(!validDeck) cout << invalid_option_message;
 				}
-
+				
 					return allDecks[index];
 	}
-	Deck edit(Deck& editDeck){
-
-		
-
-				cout << "Would you like to: " << endl << "(A)dd a card" << endl << "(D)elete a card" << endl << "(C)hange a word"
-					<< endl << "(M)odify a definition" << endl;
-
-				cout << "Please enter an option from above: ";
-				string userInput;
-				getline(cin, userInput);
-
-				if (userInput == "A"){
-					cout << "Enter the word you would like to add: ";
-					getline(cin, userInput);
-
-					Flashcard newCard;
-					newCard.setWord(userInput);
-
-					cout << "Enter the Definition for this word: ";
-					getline(cin, userInput);
-					newCard.setDefintion(userInput);
-
-					editDeck.add(newCard);
-
-					cout << endl << "Your new card has been added to the deck!" << endl;
-
-				}
-				else if (userInput == "D"){
-
-				}
-				else if (userInput == "C"){
-
-				}
-				else if (userInput == "M"){
-
-				}
 	
-				return editDeck;
+void edit(Deck& editDeck){
+	bool continueEdit = true;
+	while(continueEdit) { 
+		cout << "-------- EDIT MENU --------" << endl << "(A)dd a card" << endl << "(D)elete a card" << endl << "(C)hange a word"
+			<< endl << "(M)odify a definition" << endl << "(Q)uit Editing" << endl;
+		cout << "Please enter an option from above: ";
+		string userInput;
+		getline(cin, userInput);
+				
+		//ADD A CARD
+		if (EqualIgnoreCase(userInput, "A") || EqualIgnoreCase(userInput, "add")) {
+			cout << "Enter the word you would like to add: ";
+			getline(cin, userInput);
+			Flashcard newCard;
+			newCard.setWord(userInput);
+			cout << "Enter the Definition for this word: ";
+			getline(cin, userInput);
+			newCard.setDefintion(userInput);
+			newCard.makeLine();
+
+			editDeck.add(newCard);
+			cout << endl << "Your new card has been added to the deck!" << endl;
+		}
+				
+		//DELETE A CARD 
+		else if (EqualIgnoreCase(userInput, "D") || EqualIgnoreCase(userInput, "delete")){
+			Delete(editDeck);
+		}
+				
+		//CHANGE A WORD
+		else if (EqualIgnoreCase(userInput, "c") || EqualIgnoreCase(userInput, "change")){
+			ChangeWord(editDeck);
+				
+		}
+		else if (userInput == "M"){
+
+		} else if (EqualIgnoreCase(userInput, "q") || EqualIgnoreCase(userInput, "quit")) {
+			continueEdit = false;
+		}
 	}
+	return;
+	}
+	
+	
+void Delete(Deck& editDeck) {
+	cout << endl << "** List of words in " << editDeck.getDeckName() << " **" << endl;
+	for(int i = 0; i < editDeck.getDeckSize(); i++) {
+		cout << editDeck.getCard(i).getWord() << endl;
+	}
+	if (editDeck.getDeckSize() == 0) {
+		cout << "This deck is empty! Enter (R) below!" << endl;
+	}
+	cout << endl << "Enter a word to delete from those listed above or enter (R) to return to the edit menu : ";
+	string userWord;
+	bool validWord = false;
+			
+	//Determine card to delete
+	while (!validWord) {
+		getline(cin, userWord);
+		if (EqualIgnoreCase(userWord, "r")) validWord = true;
+		for(int i = 0; i < editDeck.getDeckSize(); i++) {
+			if (EqualIgnoreCase(userWord, editDeck.getCard(i).getWord())) {
+				
+				//Final chance to avoid deletion
+				cout << "This will permantently delete your flashcard for " << editDeck.getCard(i).getWord()
+					<< ", continue? (Y/N): ";
+				string userchoice;
+				bool validChoice = false;
+				while (!validChoice) {
+					getline(cin, userchoice);
+					if (EqualIgnoreCase(userchoice, "y")) {
+						editDeck.deleteCard(i);
+						validWord = true;
+						break;
+					} else if (EqualIgnoreCase(userchoice, "n")) {
+						validWord = true;
+						break;
+						
+					//Error message for non y/n
+					} else {
+						cout << invalid_option_message;
+					}
+				}	
+			}
+		}
+		//Error message if word chosen not in list
+		if (!validWord) {
+			cout << invalid_option_message;
+		}
+	}
+}
+
+void ChangeWord(Deck& editDeck) {
+		cout << endl << "** List of words in " << editDeck.getDeckName() << " **" << endl;
+	for(int i = 0; i < editDeck.getDeckSize(); i++) {
+		cout << editDeck.getCard(i).getWord() << endl;
+	}
+	if (editDeck.getDeckSize() == 0) {
+		cout << "This deck is empty! Enter (R) below!" << endl;
+	}
+	cout << endl << "Enter a word to change from those listed above or enter (R) to return to the edit menu : ";
+	string userWord;
+	bool validWord = false;
+			
+	//Determine card to delete
+	while (!validWord) {
+		getline(cin, userWord);
+		if (EqualIgnoreCase(userWord, "r")) validWord = true;
+		for(int i = 0; i < editDeck.getDeckSize(); i++) {
+			if (EqualIgnoreCase(userWord, editDeck.getCard(i).getWord())) {
+				
+				//Final chance to avoid change
+				cout << "Enter what you would like to change this word to: ";
+				string newWord;
+				getline(cin, newWord);
+				cout << "Change " << editDeck.getCard(i).getWord() << " to " << newWord << "? (Y/N): ";
+				string userchoice;
+				getline(cin, userchoice);
+				bool validChoice = false;
+				while (!validChoice) {	
+					if (EqualIgnoreCase(userchoice, "y")) {
+						editDeck.getCard(i).setWord(newWord);
+						cout << "Word Changed!" << endl;
+						validWord = true;
+						break;
+					} else if (EqualIgnoreCase(userchoice, "n")) {
+						validWord = true;
+						break;
+						
+					//Error message for non y/n
+					} else {
+						cout << invalid_option_message;
+					}
+				}	
+			}
+		}
+		//Error message if word chosen not in list
+		if (!validWord) {
+			cout << invalid_option_message;
+		}
+	}
+}
+
+	void writeSaveFile(string username){
+		string writtenFileName = username + ".txt";
+		ofstream myfile;
+		myfile.open(writtenFileName);
+
+		string deckName = "";
+		for(int i = 0; i < allDecks.size(); ++i){
+			deckName = (allDecks[i]).getDeckName();
+			myfile << "Deck: " + deckName + "\n";
+
+			int counts = 0;
+			for(int k = 0; k < allDecks[i].getDeckSize(); ++k){
+				counts++;
+				string lineToWrite = ((allDecks[i]).getCard(k)).getFlashcardLine();
+				if ((allDecks[i]).getDeckSize() == counts){
+					myfile << lineToWrite;
+				}
+				else{
+					myfile << lineToWrite + "\n";
+				}
+			}
+		}
+
+		myfile.close();
+		cout << "Deck(s) saved!" << endl;
+	}
+
 	
