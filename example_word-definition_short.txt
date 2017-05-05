@@ -1,0 +1,3 @@
+word - definition
+Another Word - Another definition
+word_3 - definition_3
