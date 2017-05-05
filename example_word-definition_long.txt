@@ -1,0 +1,14 @@
+engineering psychology - understand the human mind as it relates to design
+safety - Reduces the risk of injury and death; (high-risk systems)
+performance - increases productivity, quality, and efficiency
+satisfaction - increases acceptance, comfort, and well-being
+task design - Focuses more on changing what operators do than on changing what the devices they use
+equipment design - changes the physical equipment that people work with
+environment design - changes the physical environment where tasks are carried out
+training - enhances the knowledge and skills of people by preparing them for the job environment
+Heuristic evaluation - design principles and guidelines are applied to prototype
+front-end analysis - understand the users, needs, and demands of work situation
+task analysis - data collected by observing and talking with people
+time-motion studies - focuses on improving performance of manual work
+sequence and timing - when, in what order, and how long tasks take to perform 
+mixed design - both between-subjects and within-subjects
