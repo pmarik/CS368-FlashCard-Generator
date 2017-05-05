@@ -21,6 +21,7 @@
 
     Deck::Deck(){
 
+        //Keeps track of total number of decks created
         deckCount++;
         deckName = "Deck Number " + deckCount;
         deckSize = 0;
@@ -29,12 +30,14 @@
     }
 
     Deck::Deck(std::string loadname){
-        deckName = loadname + " Deck";
+        
+        deckName = loadname;
         deckCount++;
         deckSize = 0;
     }
 
     void Deck::add(Flashcard card){
+    
         usersCards.push_back(card);
         deckSize++;
 
@@ -48,8 +51,7 @@
         return deckName;
     }
 
-    Flashcard Deck::getCard(int index){
-
+    Flashcard& Deck::getCard(int index){
         return usersCards[index];
     }
 
@@ -58,6 +60,8 @@
     }
 
     void Deck::deleteCard(int index){
+        //Deletes a card at specified index
         usersCards.erase(usersCards.begin() + index);
+        deckSize--;
     }
     
