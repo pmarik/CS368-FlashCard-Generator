@@ -24,7 +24,10 @@
 class Deck{
 
     private:
+
         std::string deckName;
+
+        //The vector used to store multiple flashcards
         std::vector <Flashcard> usersCards;
         static int deckCount;
         int deckSize;
@@ -72,7 +75,7 @@ class Deck{
          * @param index the position of the card 
          * @return the Flashcard selected
          */
-        Flashcard getCard(int index);
+        Flashcard& getCard(int index);
 
         /**
          * @brief Gets the number of cards in a deck
