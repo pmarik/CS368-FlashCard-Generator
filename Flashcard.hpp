@@ -4,7 +4,7 @@
 // Author:         Paul Marik, David Wissink 
 // CS email:       marik@cs.wisc.edu, wissink@cs.wisc.edu
 //
-// Description:    Represenation of the flashcards to be used in the flashcards
+// Description:    Represenation of a flashcard to be used in the flashcards
 //                 generator.
 //
 // Sources:        cppreference.com, <sources, if any>
@@ -27,15 +27,25 @@ class Flashcard{
     
     private:
 
+     // The word and definition combo in one string
      std::string line;
+
      std::string word;
      std::string definition;
 
     public:
+
+    
      /**
-      * @brief Constructor for flashcards.
+      * @brief Default Constructor for a flashcard
       *
-      * @param string the filename of the user's document to generate cards from.
+      */
+    Flashcard();
+
+     /**
+      * @brief Constructor for flashcard
+      *
+      * @param string the filename of the user's document to generate cards from
       */
      Flashcard(std::string line);
 
@@ -53,28 +63,36 @@ class Flashcard{
          */
      std::string getDefinition();
 
+
+     /**
+         * @brief Gets the line of the flashcard
+         *
+         * @return the string line of both word and definition
+         */
+     std::string getFlashcardLine();
+
     /**
          * @brief Changes the current defintion to a new definition
          *
          * @param def the new defintion 
          */
-     void editDefintion(std::string def);
+     void setDefintion(std::string def);
 
     /**
          * @brief Changes the current word to a new word
          *
          * @param newWord the new word 
          */
-     void editWord(std::string newWord);
+     void setWord(std::string newWord);
 
-
+     /**
+         * @brief Creates a line out of the word and definition pair.
+         *
+         */
+     void resetLine();
 
 
 };
 
 #endif //Final_Flashcard_HPP
-        
-
-
-
-
+  
